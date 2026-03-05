@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using api;
+using backend.Models;
 
-namespace api.Controllers
+namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -14,105 +14,112 @@ namespace api.Controllers
         {
             new Product
             {
-                ID = 1,
-                Title = "Hibbler Dynamics Textbook",
-                Description = "Used engineering dynamics textbook",
+                Id = 1,
+                Title = "Hibbeler Dynamics Textbook",
+                Description = "Used engineering dynamics textbook - comprehensive and well-maintained",
                 Price = 50m,
-                Category = "Books",
-                SellerName = "Alice",
+                Category = "Textbooks",
+                SellerName = "EngineeringSenior99",
                 PostedDate = DateTime.UtcNow.AddDays(-10),
                 ImageUrl = "https://picsum.photos/200",
-                // add Condition property? not in model so maybe we extend via description
+                Condition = "Like New"
             },
             new Product
             {
-                ID = 2,
-                Title = "TI-84 Calculator",
-                Description = "Graphing calculator in like new condition",
+                Id = 2,
+                Title = "TI-84 Plus",
+                Description = "Graphing calculator perfect for engineering coursework",
                 Price = 60m,
                 Category = "Electronics",
-                SellerName = "Bob",
+                SellerName = "BuckeyeTech",
                 PostedDate = DateTime.UtcNow.AddDays(-8),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "Like New"
             },
             new Product
             {
-                ID = 3,
-                Title = "27-inch Monitor",
-                Description = "27-inch Full HD monitor, used - good",
+                Id = 3,
+                Title = "4K Monitor 27-inch",
+                Description = "Ultra HD monitor - ideal for CAD and design work",
                 Price = 120m,
                 Category = "Electronics",
-                SellerName = "Carol",
+                SellerName = "JulieW",
                 PostedDate = DateTime.UtcNow.AddDays(-5),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "Used - Good"
             },
             new Product
             {
-                ID = 4,
+                Id = 4,
                 Title = "Mechanical Keyboard",
-                Description = "RGB mechanical keyboard, used - good",
+                Description = "RGB mechanical keyboard with hot-swap switches",
                 Price = 40m,
                 Category = "Electronics",
-                SellerName = "Dave",
+                SellerName = "MikeEE",
                 PostedDate = DateTime.UtcNow.AddDays(-12),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "Like New"
             },
             new Product
             {
-                ID = 5,
-                Title = "3D Printer PLA Filament",
-                Description = "1kg spool of PLA filament, like new",
-                Price = 20m,
+                Id = 5,
+                Title = "Arduino Starter Kit",
+                Description = "Complete Arduino starter kit with sensors and components",
+                Price = 45m,
                 Category = "Tools",
-                SellerName = "Eve",
+                SellerName = "SarahDev",
                 PostedDate = DateTime.UtcNow.AddDays(-4),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "New"
             },
             new Product
             {
-                ID = 6,
-                Title = "Raspberry Pi 4",
-                Description = "Raspberry Pi 4 Model B 4GB, used - good",
+                Id = 6,
+                Title = "Digital Multimeter",
+                Description = "Professional grade multimeter for electronics testing",
                 Price = 35m,
-                Category = "Electronics",
-                SellerName = "Frank",
+                Category = "Tools",
+                SellerName = "AlexBuilder",
                 PostedDate = DateTime.UtcNow.AddDays(-2),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "Used - Good"
             },
             new Product
             {
-                ID = 7,
-                Title = "Set of Precision Screwdrivers",
-                Description = "Set of 10 precision screwdrivers, like new",
-                Price = 15m,
+                Id = 7,
+                Title = "Breadboard Set with Components",
+                Description = "Prototyping breadboards with resistors, capacitors, and wires",
+                Price = 25m,
                 Category = "Tools",
-                SellerName = "Grace",
+                SellerName = "ChrisTools",
                 PostedDate = DateTime.UtcNow.AddDays(-6),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "New"
             },
             new Product
             {
-                ID = 8,
-                Title = "USB-C Power Bank",
-                Description = "10000mAh power bank, used - good",
-                Price = 25m,
+                Id = 8,
+                Title = "USB-C Power Bank 20000mAh",
+                Description = "High-capacity power bank with fast charging support",
+                Price = 35m,
                 Category = "Electronics",
-                SellerName = "Heidi",
+                SellerName = "TaylorElectro",
                 PostedDate = DateTime.UtcNow.AddDays(-1),
                 ImageUrl = "https://picsum.photos/200",
+                Condition = "Like New"
             }
         };
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> GetProducts()
+        public ActionResult<IEnumerable<Product>> GetAll()
         {
             return Ok(_products);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Product> GetProduct(int id)
+        public ActionResult<Product> GetById(int id)
         {
-            var product = _products.FirstOrDefault(p => p.ID == id);
+            var product = _products.FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
                 return NotFound();

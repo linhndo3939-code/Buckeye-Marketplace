@@ -1,34 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('http://localhost:5100/api/products')
+      .then(response => response.json())
+      .then(data => {
+        setProducts(data)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error)
+        setLoading(false)
+      })
+  }, [])
+
+  const ProductCard = ({ product }) => (
+    <div style={{
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      padding: '16px',
+      margin: '8px',
+      width: '250px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+    }}>
+      <h3>{product.title}</h3>
+      <p><strong>Price:</strong> ${product.price}</p>
+      <p><strong>Category:</strong> {product.category}</p>
+      <p><strong>Seller:</strong> {product.sellerName}</p>
+    </div>
+  )
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{ padding: '20px' }}>
+      <h1>Buckeye Marketplace</h1>
+      {loading ? (
+        <p>Loading products...</p>
+      ) : products.length === 0 ?(
+        <h2>No products available at the moment. </h2>
+      ) : (
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          {products.map((product, index) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
