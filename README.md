@@ -97,7 +97,7 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 ## Milestone 3 Screenshots
 
 ### Product List View
-![Product List](./docs/ProductListPage.png)
+![Product List](docs/ProductListPage.png)
 
 ### Product Detail View
-![Product Detail](./docs/ProductDetailPage.png)
+![Product Detail](docs/ProductDetailPage.png)
