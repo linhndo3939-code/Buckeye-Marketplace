@@ -93,3 +93,11 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 * **Product Grid:** A collection of Item Card molecules showing all available textbooks.
 * **Navigation Bar:** The top header containing the logo, Search Bar, and User Profile link.
 * **Sidebar Filter:** The section containing all category and price range Molecules.
+
+## Milestone 3 Screenshots
+
+### Product List View
+![Product List](./docs/ProductListPage.png)
+
+### Product Detail View
+![Product Detail](./docs/ProductDetailPage.png)
