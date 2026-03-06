@@ -94,6 +94,9 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 * **Navigation Bar:** The top header containing the logo, Search Bar, and User Profile link.
 * **Sidebar Filter:** The section containing all category and price range Molecules.
 
+## How to Run React App and .NET API Locally
+* Backend: cd backend, then dotnet run (Listens on port 5000).
+* Frontend: cd client, npm install, then npm run dev (Runs on port 5174). 
 ## Milestone 3 Screenshots
 
 ### Product List View
@@ -101,3 +104,21 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 
 ### Product Detail View
 ![Product Detail](docs/ProductDetailPage.png)
+
+## AI Usage Summary
+
+### Prompts
+> * "Help me add a CORS policy to Program.cs for React on port 3000."
+> * "Rewrite App.jsx to fetch products using useEffect/useState and create a ProductCard component with loading states."
+> * "Refactor App.jsx to use react-router-dom with routes for '/' and '/product/:id', fetching from localhost:5000."
+> * "Update the 'AllowReact' CORS policy to include port 5173 and 5174."
+
+### What I Accepted
+* The logic for adding multiple origins to `Program.cs`.
+* The `useEffect` fetching patterns for both the list and detail views.
+* The specific Markdown syntax for images containing spaces in the filenames.
+
+### Human Oversight & Judgment
+* **Verification**: I manually verified that the [Hibbeler Dynamics Textbook](http://localhost:5174/) and other 7 products were correctly pulled from the API.
+* **Refinement**: I modified the CSS-in-JS styles to ensure the [Product Grid](http://localhost:5174/) was responsive and matched my Milestone 2 design.
+* **Troubleshooting**: I identified that Vite was running on port 5174 and manually updated the backend policy to allow the connection.
