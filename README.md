@@ -82,7 +82,7 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 * **Button:** Red/Gray action buttons for "View Details" or "Message Seller."
 * **Input Field:** Search bar text entry.
 * **Badge:** Price tags and condition labels (e.g., "Like New").
-* **Typography:** Specific font styles for book titles and headers.
+* **Typography:** Specific font styles for book titles and headers.. 
 
 ### Molecules (Groups of atoms working together)
 * **Search Bar:** Combines the Input atom with a Search Button atom.
