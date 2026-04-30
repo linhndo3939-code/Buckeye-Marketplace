@@ -18,8 +18,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      
-      # Add a test step here to satisfy the "Automated test" requirement
+
       - name: Run Frontend Tests
         run: |
           cd client
@@ -33,6 +32,6 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MUD_0C2A45910 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/client" # App source code path
-          api_location: "/backend" # Api source code path - optional
-          output_location: "build" # Built app content path
+          app_location: "/client"
+          api_location: "/backend"
+          output_location: "build"
