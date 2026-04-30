@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using backend.Models;
+using backend; // FIXED: Changed from backend.Data to backend
 
 namespace backend.Controllers
 {
@@ -7,35 +9,75 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class CartController : ControllerBase
     {
-        // For now, we use a static list to act as our "database" 
-        // until we run the EF Migrations in the next step.
-        private static List<CartItem> _cartItems = new List<CartItem>();
+        private readonly AppDbContext _context;
+
+        public CartController(AppDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<Cart> GetCart()
+        public async Task<ActionResult<Cart>> GetCart()
         {
-            return Ok(new Cart { Items = _cartItems });
+            var items = await _context.CartItems.Include(i => i.Product).ToListAsync();
+            return Ok(new Cart { Items = items });
         }
 
         [HttpPost]
-        public IActionResult AddToCart([FromBody] CartItem item)
+        public async Task<IActionResult> AddToCart([FromBody] CartItem item)
         {
-            var existingItem = _cartItems.FirstOrDefault(i => i.ProductId == item.ProductId);
+            var existingItem = await _context.CartItems
+                .FirstOrDefaultAsync(i => i.ProductId == item.ProductId);
+
             if (existingItem != null)
             {
                 existingItem.Quantity += item.Quantity;
             }
             else
             {
-                _cartItems.Add(item);
+                _context.CartItems.Add(item);
             }
+
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpDelete("clear")]
-        public IActionResult ClearCart()
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateQuantity(int id, [FromBody] int quantity)
         {
-            _cartItems.Clear();
+            var cartItem = await _context.CartItems.FindAsync(id);
+            if (cartItem == null) return NotFound();
+
+            if (quantity <= 0)
+            {
+                _context.CartItems.Remove(cartItem);
+            }
+            else
+            {
+                cartItem.Quantity = quantity;
+            }
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveItem(int id)
+        {
+            var cartItem = await _context.CartItems.FindAsync(id);
+            if (cartItem == null) return NotFound();
+
+            _context.CartItems.Remove(cartItem);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("clear")]
+        public async Task<IActionResult> ClearCart()
+        {
+            var allItems = await _context.CartItems.ToListAsync();
+            _context.CartItems.RemoveRange(allItems);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

@@ -8,8 +8,11 @@ using backend;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Database Connection
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=buckeyemarket.db"));
+//builder.Services.AddDbContext<AppDbContext>(options =>
+ //   options.UseSqlite("Data Source=buckeyemarket.db"));
+
+ builder.Services.AddDbContext<backend.AppDbContext>(options => 
+    options.UseSqlServer("Server=tcp:buckeye-market-server-linhn.database.windows.net,1433;Initial Catalog=BuckeyeMarketDB;Persist Security Info=False;User ID=dbadmin;Password=BuckeyeMarket!2026;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
 
 // 2. Identity Configuration (Milestone 5)
 // Updated to include Role services
