@@ -1,95 +1,126 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom'
 import './App.css'
-import { useCart } from './context/CartContext.jsx' 
-import CartPage from './pages/CartPage.jsx' 
-import Auth from './components/Auth.jsx' 
-import OrdersPage from './pages/OrdersPage.jsx' 
-import ProtectedRoute from './components/ProtectedRoute.jsx' // 1. Import the ProtectedRoute
-import axios from 'axios';
 
-// Attach the JWT token to every request automatically
-axios.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('userToken');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error)
-);
+const ProductCard = ({ product }) => (
+  <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <div style={{
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      padding: '16px',
+      margin: '8px',
+      width: '250px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
+      transition: 'transform 0.2s',
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+    >
+      <h3>{product.title}</h3>
+      <p><strong>Price:</strong> ${product.price}</p>
+      <p><strong>Category:</strong> {product.category}</p>
+      <p><strong>Seller:</strong> {product.sellerName}</p>
+    </div>
+  </Link>
+)
 
-function ProductList({ products, addToCart }) {
-  if (!products) return <div>Loading products...</div>;
-  return (
-    <main className="product-grid">
-      {products.map(product => (
-        <div key={product.id} className="product-card">
-          <h3>{product.title}</h3>
-          <p className="price">${product.price}</p>
-          <p className="condition">{product.condition}</p>
-          <button onClick={() => addToCart(product)}>
-            Add to Cart
-          </button>
-        </div>
-      ))}
-    </main>
-  );
-}
-
-function App() {
-  const [products, setProducts] = useState([]);
-  const cartContext = useCart(); 
+function ProductList() {
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('http://localhost:5000/api/products')
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error("Error fetching products:", err));
-  }, []);
-
-  if (!cartContext) return <div style={{padding: '50px', textAlign: 'center'}}><h2>Loading Buckeye Marketplace...</h2><p>If this persists, check your CartProvider in main.jsx</p></div>;
-
-  const { cart, addToCart } = cartContext;
+      .then(response => response.json())
+      .then(data => {
+        setProducts(data)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error)
+        setLoading(false)
+      })
+  }, [])
 
   return (
-    <Router>
-      <div className="app-container">
-        <header>
-          <h1>Buckeye Marketplace</h1>
-          <nav className="navbar">
-            <Link to="/" className="nav-link">Store</Link>
-            <Link to="/cart" className="nav-link">View Cart ({cart?.length || 0})</Link>
-            <Link to="/orders" className="nav-link">My Orders</Link> 
-            <Link to="/login" className="nav-link">Login/Register</Link> 
-          </nav>
-        </header>
+    <div style={{ padding: '20px' }}>
+      <h1>Buckeye Marketplace</h1>
+      {loading ? (
+        <p>Loading products...</p>
+      ) : products.length === 0 ? (
+        <h2>No products available at the moment.</h2>
+      ) : (
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
-        <Routes>
-          <Route path="/" element={<ProductList products={products} addToCart={addToCart} />} />
-          <Route path="/login" element={<Auth />} /> 
+function ProductDetail() {
+  const { id } = useParams()
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-          {/* 2. Wrap Protected Routes (Addressing Rubric Item #3c) */}
-          <Route 
-            path="/cart" 
-            element={
-              <ProtectedRoute>
-                <CartPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/orders" 
-            element={
-              <ProtectedRoute>
-                <OrdersPage />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/products/${id}`)
+      .then(response => response.json())
+      .then(data => {
+        setProduct(data)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error fetching product:', error)
+        setLoading(false)
+      })
+  }, [id])
+
+  if (loading) {
+    return <div style={{ padding: '20px' }}><p>Loading product details...</p></div>
+  }
+
+  if (!product) {
+    return <div style={{ padding: '20px' }}><p>Product not found</p></div>
+  }
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <Link to="/" style={{ color: '#0066cc', textDecoration: 'none', marginBottom: '20px', display: 'inline-block' }}>
+        ← Back to List
+      </Link>
+      <div style={{
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        padding: '24px',
+        marginTop: '20px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      }}>
+        <h1>{product.title}</h1>
+        <p style={{ fontSize: '24px', color: '#28a745', fontWeight: 'bold' }}>${product.price}</p>
+        <p><strong>Category:</strong> {product.category}</p>
+        <p><strong>Seller:</strong> {product.sellerName}</p>
+        <p><strong>Description:</strong> {product.description}</p>
+        <p><strong>Posted:</strong> {new Date(product.postedDate).toLocaleDateString()}</p>
       </div>
-    </Router>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ProductList />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

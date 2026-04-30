@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\linhn\\OneDrive - The Ohio State University\\4630\\Milestones\\Buckeye-Marketplace\\backend\\api.csproj": {}
+    "C:\\Buckeye-Marketplace\\backend\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\linhn\\OneDrive - The Ohio State University\\4630\\Milestones\\Buckeye-Marketplace\\backend\\api.csproj": {
+    "C:\\Buckeye-Marketplace\\backend\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\linhn\\OneDrive - The Ohio State University\\4630\\Milestones\\Buckeye-Marketplace\\backend\\api.csproj",
+        "projectUniqueName": "C:\\Buckeye-Marketplace\\backend\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\linhn\\OneDrive - The Ohio State University\\4630\\Milestones\\Buckeye-Marketplace\\backend\\api.csproj",
-        "packagesPath": "C:\\Users\\linhn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\linhn\\OneDrive - The Ohio State University\\4630\\Milestones\\Buckeye-Marketplace\\backend\\obj\\",
+        "projectPath": "C:\\Buckeye-Marketplace\\backend\\api.csproj",
+        "packagesPath": "C:\\Users\\Linh\\.nuget\\packages\\",
+        "outputPath": "C:\\Buckeye-Marketplace\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\linhn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Linh\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,31 +43,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+            "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[8.0.23, )"
             },
-            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+            "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.OpenApi": {
-              "target": "Package",
-              "version": "[1.6.14, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [
@@ -89,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.420/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.417/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
