@@ -39,9 +39,10 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MUD_0C2A45910 }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/client" # Changed from "/" to "/client"
+          app_location: "/client" 
           api_location: "" 
           output_location: "build" 
+          app_build_command: "npm install && npm run build"
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
