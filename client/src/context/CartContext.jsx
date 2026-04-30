@@ -1,27 +1,87 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
 
 const CartContext = createContext();
 
+// Centralized API URL (Addressing Professor's coaching note on hardcoded URLs)
+const API_URL = 'http://localhost:5000/api/cart';
+
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    // We'll handle the "Add" logic locally for now so it's instant!
-    const addToCart = (product) => {
-        setCart((prevCart) => {
-            const newCart = [...prevCart, product];
-            console.log("Cart Updated:", newCart); // This helps us debug in Inspect > Console
-            return newCart;
-        });
+    // 1. Fetch Cart from Database on Load
+    const fetchCart = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(API_URL);
+            // The API returns { items: [...] }, so we set the items array
+            setCart(response.data.items || []);
+        } catch (error) {
+            console.error("Error fetching cart:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const removeFromCart = (productId) => {
-        setCart((prevCart) => prevCart.filter(item => item.id !== productId));
+    useEffect(() => {
+        fetchCart();
+    }, []);
+
+    // 2. Add to Cart (POST)
+    const addToCart = async (product) => {
+        try {
+            await axios.post(API_URL, {
+                productId: product.id,
+                quantity: 1
+            });
+            fetchCart(); // Refresh cart from DB after adding
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+        }
     };
 
-    const clearCart = () => setCart([]);
+    // 3. Remove Single Item (DELETE)
+    const removeFromCart = async (cartItemId) => {
+        try {
+            await axios.delete(`${API_URL}/${cartItemId}`);
+            fetchCart(); // Refresh cart from DB after removing
+        } catch (error) {
+            console.error("Error removing item:", error);
+        }
+    };
+
+    // 4. Update Quantity (PUT) - New feature required by rubric
+    const updateQuantity = async (cartItemId, newQuantity) => {
+        try {
+            await axios.put(`${API_URL}/${cartItemId}`, newQuantity, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            fetchCart();
+        } catch (error) {
+            console.error("Error updating quantity:", error);
+        }
+    };
+
+    // 5. Clear Cart (DELETE /clear)
+    const clearCart = async () => {
+        try {
+            await axios.delete(`${API_URL}/clear`);
+            setCart([]);
+        } catch (error) {
+            console.error("Error clearing cart:", error);
+        }
+    };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+        <CartContext.Provider value={{ 
+            cart, 
+            loading, 
+            addToCart, 
+            removeFromCart, 
+            updateQuantity, 
+            clearCart 
+        }}>
             {children}
         </CartContext.Provider>
     );

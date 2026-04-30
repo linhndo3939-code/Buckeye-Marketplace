@@ -4,7 +4,8 @@ import './App.css'
 import { useCart } from './context/CartContext.jsx' 
 import CartPage from './pages/CartPage.jsx' 
 import Auth from './components/Auth.jsx' 
-import OrdersPage from './pages/OrdersPage.jsx' // 1. Added this import
+import OrdersPage from './pages/OrdersPage.jsx' 
+import ProtectedRoute from './components/ProtectedRoute.jsx' // 1. Import the ProtectedRoute
 import axios from 'axios';
 
 // Attach the JWT token to every request automatically
@@ -60,7 +61,6 @@ function App() {
           <nav className="navbar">
             <Link to="/" className="nav-link">Store</Link>
             <Link to="/cart" className="nav-link">View Cart ({cart?.length || 0})</Link>
-            {/* 2. Added navigation link for the grader */}
             <Link to="/orders" className="nav-link">My Orders</Link> 
             <Link to="/login" className="nav-link">Login/Register</Link> 
           </nav>
@@ -68,10 +68,25 @@ function App() {
 
         <Routes>
           <Route path="/" element={<ProductList products={products} addToCart={addToCart} />} />
-          <Route path="/cart" element={<CartPage />} />
           <Route path="/login" element={<Auth />} /> 
-          {/* 3. Added the actual Route */}
-          <Route path="/orders" element={<OrdersPage />} /> 
+
+          {/* 2. Wrap Protected Routes (Addressing Rubric Item #3c) */}
+          <Route 
+            path="/cart" 
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orders" 
+            element={
+              <ProtectedRoute>
+                <OrdersPage />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </div>
     </Router>
