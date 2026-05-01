@@ -1,9 +1,40 @@
-/* Main Layout */
+/* --- Global Resets & Full-Width Logic --- */
+body {
+  margin: 0;
+  padding: 0;
+  display: block;
+  min-width: 100vw;
+  background-color: #f4f4f4;
+  overflow-x: hidden; /* Prevents accidental horizontal scrolling */
+}
+
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center; 
+}
+
+/* Force the navigation area to be edge-to-edge */
+.navbar {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 15px 0;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  background-color: #fff; /* Optional: adds a distinct bar across the top */
+  border-bottom: 1px solid #ddd;
+}
+
+/* --- Main Layout Container --- */
 .app-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto; /* Centers the content block */
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left; /* Resets the text-align from #root for content */
 }
 
 header {
@@ -25,14 +56,13 @@ h1 {
   font-size: 1.1rem;
 }
 
-/* Product Grid */
+/* --- Product Grid --- */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 25px;
 }
 
-/* Individual Product Cards */
 .product-card {
   border: 1px solid #ddd;
   padding: 15px;
@@ -43,6 +73,7 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: left; /* Keeps card text aligned left */
 }
 
 .product-card:hover {
@@ -81,7 +112,7 @@ h1 {
   margin-bottom: 15px;
 }
 
-/* Add to Cart Button */
+/* --- Buttons --- */
 button {
   background-color: #444;
   color: white;
@@ -94,13 +125,14 @@ button {
 }
 
 button:hover {
-  background-color: #ba0c2f; /* Turns Scarlet on hover */
+  background-color: #ba0c2f; 
 }
 
 button:active {
   transform: scale(0.98);
 }
 
+/* --- Cart Specific Styles --- */
 .cart-container {
     max-width: 800px;
     margin: 20px auto;
@@ -108,6 +140,7 @@ button:active {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: left;
 }
 
 .cart-table {
@@ -123,7 +156,7 @@ button:active {
 }
 
 .remove-btn {
-    background-color: #bb0000; /* Scarlet */
+    background-color: #bb0000;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -132,7 +165,7 @@ button:active {
 }
 
 .checkout-btn {
-    background-color: #666; /* Gray */
+    background-color: #666;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -144,16 +177,11 @@ button:active {
 .checkout-btn:hover {
     background-color: #444;
 }
-.navbar {
-  margin: 10px 0;
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
 
+/* --- Navigation Links --- */
 .nav-link {
   text-decoration: none;
-  color: #ba0c2f; /* Buckeye Scarlet */
+  color: #ba0c2f;
   font-weight: bold;
   padding: 5px 10px;
   border: 1px solid #ba0c2f;
@@ -163,4 +191,65 @@ button:active {
 .nav-link:hover {
   background-color: #ba0c2f;
   color: white;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.auth-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.auth-card label {
+  display: block;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.navbar-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  background: #ba0c2f;
+  color: white;
+  height: 80px;
+}
+
+.logo {
+  color: white;
+  font-weight: 900;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
 }

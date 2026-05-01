@@ -9,8 +9,8 @@ namespace backend
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             
-            // Pointing directly to your Azure SQL Database
-            optionsBuilder.UseSqlServer("Server=tcp:buckeye-market-server-linhn.database.windows.net,1433;Initial Catalog=BuckeyeMarketDB;Persist Security Info=False;User ID=dbadmin;Password=BuckeyeMarket!2026;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            // MATCH THIS TO PROGRAM.CS
+            optionsBuilder.UseSqlite("Data Source=buckeye_marketplace.db");
 
             return new AppDbContext(optionsBuilder.Options);
         }

@@ -1,57 +1,57 @@
+using Microsoft.EntityFrameworkCore;
+using backend;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// 1. Setup the policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173", "http://localhost:5174")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
+    options.AddPolicy("AllowReactApp",
+        policy => policy.AllowAnyOrigin()  // This allows any website to call your API
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 });
-builder.Services.AddControllers();
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=buckeye_marketplace.db")); 
 
 var app = builder.Build();
+// --- FORCE DATABASE CREATION ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        // This will create the database file and all tables if they don't exist
+        context.Database.EnsureCreated();
+        Console.WriteLine("Database check complete: buckeye_marketplace.db is ready.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database creation failed: {ex.Message}");
+    }
+}
+// -------------------------------
+// --- THE ORDER BELOW IS CRITICAL ---
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+// 2. Routing MUST come before CORS
+app.UseRouting();
 
-app.UseCors("AllowReact");
+// 3. CORS MUST come after Routing but BEFORE Authorization/MapControllers
+app.UseCors("AllowReactApp");
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
 app.MapControllers();
-app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.Run();

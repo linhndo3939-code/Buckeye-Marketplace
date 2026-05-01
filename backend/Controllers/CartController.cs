@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend.Models;
-using backend; // FIXED: Changed from backend.Data to backend
+using backend; 
+using Microsoft.AspNetCore.Cors; // Required for CORS
 
 namespace backend.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class CartController : ControllerBase
+[ApiController]
+[Route("api/[controller]")]
+[EnableCors("AllowReactApp")] // Added "App" to match Program.cs
+public class CartController : ControllerBase
     {
         private readonly AppDbContext _context;
 
@@ -23,24 +25,17 @@ namespace backend.Controllers
             return Ok(new Cart { Items = items });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddToCart([FromBody] CartItem item)
-        {
-            var existingItem = await _context.CartItems
-                .FirstOrDefaultAsync(i => i.ProductId == item.ProductId);
+[HttpPost]
+public async Task<ActionResult<CartItem>> PostCartItem(CartItem cartItem)
+{
+    _context.CartItems.Add(cartItem);
+    await _context.SaveChangesAsync();
 
-            if (existingItem != null)
-            {
-                existingItem.Quantity += item.Quantity;
-            }
-            else
-            {
-                _context.CartItems.Add(item);
-            }
-
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
+    // Fix: Ensure the first argument matches the name of your GET method exactly
+    // If your GET method is called "GetCartItems", use that name here.
+    // Change 'GetCartItems' to 'GetCart'
+return CreatedAtAction(nameof(GetCart), new { id = cartItem.Id }, cartItem);
+}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQuantity(int id, [FromBody] int quantity)
