@@ -31,6 +31,7 @@ Decision Making: When the Free Tier failed, I made the executive decision to use
 Security: I ensured that no sensitive secrets or connection strings were committed to the public GitHub repository by using Azure's "Environment Variables" feature as recommended.
 
 
+
 To create that file, simply create a new file in your root folder (the one containing backend and api.Tests) and name it AI-USAGE.md.
 
 Paste the following content into it:
@@ -38,7 +39,7 @@ Paste the following content into it:
 AI-USAGE.md
 Project: Buckeye Marketplace
 
-Student: [Your Name]
+Student: Linh Do
 
 Course: CSE 4630
 
