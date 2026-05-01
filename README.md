@@ -122,3 +122,162 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 * **Verification**: I manually verified that the [Hibbeler Dynamics Textbook](http://localhost:5174/) and other 7 products were correctly pulled from the API.
 * **Refinement**: I modified the CSS-in-JS styles to ensure the [Product Grid](http://localhost:5174/) was responsive and matched my Milestone 2 design.
 * **Troubleshooting**: I identified that Vite was running on port 5174 and manually updated the backend policy to allow the connection.
+
+
+---
+
+# 🛒 Buckeye-Marketplace
+
+## 📝 Project Description
+**Buckeye-Marketplace** is a full-stack, mobile-friendly shopping tracker and community marketplace application specifically designed for the **Ohio State University** community. The application enables students to manage shopping needs and interact with a local marketplace through a responsive web interface. This project was developed as part of **CSE 4630: Software Development Lifecycle**.
+
+---
+
+### ✨ Key Features
+*   **Personal Shopping Tracker:** Add and manage items you need to purchase.
+*   **Community Marketplace:** Browse and post items available for trade or sale within the local community.
+*   **Secure Authentication:** User accounts are protected using **JWT (JSON Web Token)** authentication.
+*   **Cloud Integration:** Fully deployed with automated **CI/CD pipelines**.
+
+---
+
+## 🛠️ Technology Stack
+*   **Frontend:** React 18+ (Vite)
+*   **Backend API:** ASP.NET Core Web API (.NET 8)
+*   **Database:** Azure SQL Database (Production Instance)
+*   **Hosting:** Azure App Service (Backend) & Render (Frontend)
+*   **CI/CD:** GitHub Actions
+
+---
+
+## 💻 Local Development Setup
+Follow these steps to run the project locally:
+
+### 1. Prerequisites
+*   **.NET 8 SDK**
+*   **Node.js** (v18 or higher)
+*   **SQL Server** (or LocalDB)
+
+### 2. Backend Setup
+1.  Navigate to the `/backend` directory.
+2.  Restore dependencies: `dotnet restore`
+3.  Update `appsettings.json` with your local connection string.
+4.  Run the API: `dotnet run`
+
+### 3. Frontend Setup
+1.  Navigate to the `/frontend` directory.
+2.  Install packages: `npm install`
+3.  Start the development server: `npm run dev`
+
+---
+
+## 🚀 Deployment Instructions
+The production environment is managed through a **GitHub Actions** CI/CD pipeline.
+
+*   **Automated Deployment:** Pushing to the `main` branch triggers the GitHub Actions workflow, which builds and deploys the backend to **Azure App Service** and the frontend to **Render**.
+*   **Environment Variables:** After deployment, ensure variables are configured in the **Azure Portal** and your frontend host.
+
+---
+
+## 🔗 API Documentation
+The API is fully documented using **Swagger**. You can view the interactive endpoints and test the API live at:
+*   **Swagger UI:** [https://buckeye-api-linhn.azurewebsites.net/swagger](https://buckeye-api-linhn.azurewebsites.net/swagger)
+
+---
+
+## 🔐 Environment Variables Needed
+To ensure the app runs correctly, set the following variables in your `.env` (Local) or Cloud Provider settings:
+
+| Variable | Description | Location |
+| :--- | :--- | :--- |
+| **DefaultConnection** | Connection string for Azure SQL | Backend / Azure App Service |
+| **JwtSettings__Secret** | 256-bit key for token encryption | Backend / Azure App Service |
+| **VITE_API_URL** | Base URL for the backend API | Frontend / Render |
+
+---
+
+# 🛒 Buckeye-Marketplace
+
+## 📝 Project Description
+**Buckeye-Marketplace** is a full-stack, mobile-friendly shopping tracker and community marketplace application specifically designed for the **Ohio State University** community. This project was developed as part of **CSE 4630: Software Development Lifecycle**.
+
+---
+
+## 🏗️ Architecture Documentation
+The system follows a **3-tier architecture** designed to ensure security, efficiency, and privacy for students.
+
+* **Presentation Layer:** React 18 (Vite) providing a responsive mobile-first UI.
+* **Application Layer:** ASP.NET Core Web API (.NET 8) handling business logic and JWT security.
+* **Data Layer:** Azure SQL Database for reliable, relational data storage.
+
+### System Architecture Diagram
+![System Architecture](./docs/system-architecture.drawio.png)
+
+---
+
+## 📊 Database Schema (ERD)
+The database handles user verification, product listings, and secure transactions.
+
+### Database Entity Relationship Diagram
+![Database ERD](./docs/Entity%20Relationship%20Diagram.drawio.png)
+
+---
+
+## 🛠️ Technology Stack
+* **Frontend:** React 18+ (Vite)
+* **Backend API:** ASP.NET Core Web API (.NET 8)
+* **Database:** Azure SQL Database
+* **Hosting:** Azure App Service (Backend) & Render (Frontend)
+* **CI/CD:** GitHub Actions
+
+---
+
+## 🤖 AI Tool Usage Summary
+AI tools were used as collaborators across the entire SDLC.
+
+### **Claude (SDLC & DevOps)**
+* **SDLC Phases:** High-level architecture planning, JWT security logic, and CI/CD YAML configuration.
+* **Problem Solving:** Debugged "output_location" errors and Azure SQL connection issues.
+
+### **GitHub Copilot (Coding)**
+* **Usage:** Provided real-time autocompletion for C# controllers, React components, and LINQ queries.
+* **Prompts Used:** 
+    * `"public async Task<IActionResult> GetProducts"`
+    * `"const CartContext = React.createContext"`
+
+### **Human Oversight & Judgment**
+* **Verification:** Manually verified all code suggestions against the CSE 4630 rubric.
+* **Refinement:** Adjusted CSS styles for mobile responsiveness.
+* **Validation:** Identified and corrected "hallucinations" regarding deprecated .NET methods.
+
+---
+
+## 💻 Local Development Setup
+
+### 1. Prerequisites
+* .NET 8 SDK
+* Node.js (v18+)
+
+### 2. Backend Setup
+1. Navigate to `/backend`
+2. `dotnet restore`
+3. `dotnet run`
+
+### 3. Frontend Setup
+1. Navigate to `/frontend`
+2. `npm install`
+3. `npm run dev`
+
+---
+
+## 🔗 API Documentation
+* **Swagger UI:** [https://buckeye-api-linhn.azurewebsites.net/swagger](https://buckeye-api-linhn.azurewebsites.net/swagger)
+
+---
+
+## 🔐 Environment Variables
+| Variable | Location |
+| :--- | :--- |
+| **DefaultConnection** | Azure App Service (Config) |
+| **JwtSettings__Secret** | Azure App Service (Secrets) |
+| **VITE_API_URL** | Render Environment Settings |
