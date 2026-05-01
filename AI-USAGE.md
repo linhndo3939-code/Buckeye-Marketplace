@@ -29,7 +29,7 @@ Verification: I manually tested all API endpoints using Swagger locally before a
 Decision Making: When the Free Tier failed, I made the executive decision to use my Azure credits to upgrade to a Basic tier to ensure project availability for the grading deadline.
 
 Security: I ensured that no sensitive secrets or connection strings were committed to the public GitHub repository by using Azure's "Environment Variables" feature as recommended.
-
+---
 
 
 To create that file, simply create a new file in your root folder (the one containing backend and api.Tests) and name it AI-USAGE.md.
