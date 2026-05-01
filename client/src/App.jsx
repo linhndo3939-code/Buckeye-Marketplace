@@ -108,6 +108,24 @@ function ProductDetail() {
         <p><strong>Seller:</strong> {product.sellerName}</p>
         <p><strong>Description:</strong> {product.description}</p>
         <p><strong>Posted:</strong> {new Date(product.postedDate).toLocaleDateString()}</p>
+        
+        {/* Scarlet Add to Cart Button */}
+        <button 
+          onClick={() => alert(`${product.title} added to cart!`)}
+          style={{
+            backgroundColor: '#ba0c2f', 
+            color: 'white',
+            padding: '12px 24px',
+            border: 'none',
+            borderRadius: '5px',
+            fontSize: '18px',
+            cursor: 'pointer',
+            marginTop: '20px',
+            width: '100%'
+          }}
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   )
