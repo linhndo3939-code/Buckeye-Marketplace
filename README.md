@@ -1,3 +1,72 @@
+# 🛒 Buckeye-Marketplace
+
+## 📝 Project Description
+**Buckeye-Marketplace** is a full-stack, mobile-friendly shopping tracker and community marketplace application specifically designed for the **Ohio State University** community. The application enables students to manage shopping needs and interact with a local marketplace through a responsive web interface. This project was developed as part of **CSE 4630: Software Development Lifecycle**.
+
+---
+
+### ✨ Key Features
+*   **Personal Shopping Tracker:** Add and manage items you need to purchase.
+*   **Community Marketplace:** Browse and post items available for trade or sale within the local community.
+*   **Secure Authentication:** User accounts are protected using **JWT (JSON Web Token)** authentication.
+*   **Cloud Integration:** Fully deployed with automated **CI/CD pipelines**.
+
+---
+
+## 🛠️ Technology Stack
+*   **Frontend:** React 18+ (Vite)
+*   **Backend API:** ASP.NET Core Web API (.NET 8)
+*   **Database:** Azure SQL Database (Production Instance)
+*   **Hosting:** Azure App Service (Backend) & Render (Frontend)
+*   **CI/CD:** GitHub Actions
+
+---
+
+## 💻 Local Development Setup
+Follow these steps to run the project locally:
+
+### 1. Prerequisites
+*   **.NET 8 SDK**
+*   **Node.js** (v18 or higher)
+*   **SQL Server** (or LocalDB)
+
+### 2. Backend Setup
+1.  Navigate to the `/backend` directory.
+2.  Restore dependencies: `dotnet restore`
+3.  Update `appsettings.json` with your local connection string.
+4.  Run the API: `dotnet run`
+
+### 3. Frontend Setup
+1.  Navigate to the `/frontend` directory.
+2.  Install packages: `npm install`
+3.  Start the development server: `npm run dev`
+
+---
+
+## 🚀 Deployment Instructions
+The production environment is managed through a **GitHub Actions** CI/CD pipeline.
+
+*   **Automated Deployment:** Pushing to the `main` branch triggers the GitHub Actions workflow, which builds and deploys the backend to **Azure App Service** and the frontend to **Render**.
+*   **Environment Variables:** After deployment, ensure variables are configured in the **Azure Portal** and your frontend host.
+
+---
+
+## 🔗 API Documentation
+The API is fully documented using **Swagger**. You can view the interactive endpoints and test the API live at:
+*   **Swagger UI:** [https://buckeye-api-linhn.azurewebsites.net/swagger](https://buckeye-api-linhn.azurewebsites.net/swagger)
+
+---
+
+## 🔐 Environment Variables Needed
+To ensure the app runs correctly, set the following variables in your `.env` (Local) or Cloud Provider settings:
+
+| Variable | Description | Location |
+| :--- | :--- | :--- |
+| **DefaultConnection** | Connection string for Azure SQL | Backend / Azure App Service |
+| **JwtSettings__Secret** | 256-bit key for token encryption | Backend / Azure App Service |
+| **VITE_API_URL** | Base URL for the backend API | Frontend / Render |
+
+---
 # Buckeye-Marketplace
 ## Feature Prioritization & Persona Mapping
 
@@ -126,75 +195,7 @@ To ensure a consistent and reusable UI for the Product Catalog, we are following
 
 ---
 
-# 🛒 Buckeye-Marketplace
 
-## 📝 Project Description
-**Buckeye-Marketplace** is a full-stack, mobile-friendly shopping tracker and community marketplace application specifically designed for the **Ohio State University** community. The application enables students to manage shopping needs and interact with a local marketplace through a responsive web interface. This project was developed as part of **CSE 4630: Software Development Lifecycle**.
-
----
-
-### ✨ Key Features
-*   **Personal Shopping Tracker:** Add and manage items you need to purchase.
-*   **Community Marketplace:** Browse and post items available for trade or sale within the local community.
-*   **Secure Authentication:** User accounts are protected using **JWT (JSON Web Token)** authentication.
-*   **Cloud Integration:** Fully deployed with automated **CI/CD pipelines**.
-
----
-
-## 🛠️ Technology Stack
-*   **Frontend:** React 18+ (Vite)
-*   **Backend API:** ASP.NET Core Web API (.NET 8)
-*   **Database:** Azure SQL Database (Production Instance)
-*   **Hosting:** Azure App Service (Backend) & Render (Frontend)
-*   **CI/CD:** GitHub Actions
-
----
-
-## 💻 Local Development Setup
-Follow these steps to run the project locally:
-
-### 1. Prerequisites
-*   **.NET 8 SDK**
-*   **Node.js** (v18 or higher)
-*   **SQL Server** (or LocalDB)
-
-### 2. Backend Setup
-1.  Navigate to the `/backend` directory.
-2.  Restore dependencies: `dotnet restore`
-3.  Update `appsettings.json` with your local connection string.
-4.  Run the API: `dotnet run`
-
-### 3. Frontend Setup
-1.  Navigate to the `/frontend` directory.
-2.  Install packages: `npm install`
-3.  Start the development server: `npm run dev`
-
----
-
-## 🚀 Deployment Instructions
-The production environment is managed through a **GitHub Actions** CI/CD pipeline.
-
-*   **Automated Deployment:** Pushing to the `main` branch triggers the GitHub Actions workflow, which builds and deploys the backend to **Azure App Service** and the frontend to **Render**.
-*   **Environment Variables:** After deployment, ensure variables are configured in the **Azure Portal** and your frontend host.
-
----
-
-## 🔗 API Documentation
-The API is fully documented using **Swagger**. You can view the interactive endpoints and test the API live at:
-*   **Swagger UI:** [https://buckeye-api-linhn.azurewebsites.net/swagger](https://buckeye-api-linhn.azurewebsites.net/swagger)
-
----
-
-## 🔐 Environment Variables Needed
-To ensure the app runs correctly, set the following variables in your `.env` (Local) or Cloud Provider settings:
-
-| Variable | Description | Location |
-| :--- | :--- | :--- |
-| **DefaultConnection** | Connection string for Azure SQL | Backend / Azure App Service |
-| **JwtSettings__Secret** | 256-bit key for token encryption | Backend / Azure App Service |
-| **VITE_API_URL** | Base URL for the backend API | Frontend / Render |
-
----
 
 # 🛒 Buckeye-Marketplace
 
