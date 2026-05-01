@@ -59,19 +59,17 @@ export const CartProvider = ({ children }) => {
     };
 
     const updateQuantity = async (cartItemId, newQuantity) => {
-        if (newQuantity < 1) return removeFromCart(cartItemId);
+    if (newQuantity < 1) return removeFromCart(cartItemId);
 
-        try {
-            // FIX: Many .NET Put methods require the ID in the body AND the URL
-            await axios.put(`${API_URL}/${cartItemId}`, { 
-                id: cartItemId,
-                quantity: newQuantity 
-            }); 
-            fetchCart(); 
-        } catch (error) {
-            console.error("Error updating quantity:", error);
-        }
-    };
+    try {
+        await axios.put(`${API_URL}/${cartItemId}`, { 
+            Quantity: newQuantity // Match the C# property name exactly
+        }); 
+        fetchCart(); 
+    } catch (error) {
+        console.error("Error updating quantity:", error);
+    }
+};
 
     const clearCart = async () => {
         try {

@@ -38,23 +38,23 @@ return CreatedAtAction(nameof(GetCart), new { id = cartItem.Id }, cartItem);
 }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateQuantity(int id, [FromBody] int quantity)
-        {
-            var cartItem = await _context.CartItems.FindAsync(id);
-            if (cartItem == null) return NotFound();
+public async Task<IActionResult> UpdateQuantity(int id, [FromBody] CartItem updateInfo)
+{
+    var cartItem = await _context.CartItems.FindAsync(id);
+    if (cartItem == null) return NotFound();
 
-            if (quantity <= 0)
-            {
-                _context.CartItems.Remove(cartItem);
-            }
-            else
-            {
-                cartItem.Quantity = quantity;
-            }
+    if (updateInfo.Quantity <= 0)
+    {
+        _context.CartItems.Remove(cartItem);
+    }
+    else
+    {
+        cartItem.Quantity = updateInfo.Quantity;
+    }
 
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
+    await _context.SaveChangesAsync();
+    return NoContent();
+}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveItem(int id)
