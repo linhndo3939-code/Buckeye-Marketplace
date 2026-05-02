@@ -17,7 +17,7 @@
 *   **Frontend:** React 18+ (Vite)
 *   **Backend API:** ASP.NET Core Web API (.NET 8)
 *   **Database:** Azure SQL Database (Production Instance)
-*   **Hosting:** Azure App Service (Backend) & Render (Frontend)
+*   **Hosting:** Azure App Service (Backend) & Azure (Frontend)
 *   **CI/CD:** GitHub Actions
 
 ---
@@ -46,7 +46,7 @@ Follow these steps to run the project locally:
 ## 🚀 Deployment Instructions
 The production environment is managed through a **GitHub Actions** CI/CD pipeline.
 
-*   **Automated Deployment:** Pushing to the `main` branch triggers the GitHub Actions workflow, which builds and deploys the backend to **Azure App Service** and the frontend to **Render**.
+*   **Automated Deployment:** Pushing to the `main` branch triggers the GitHub Actions workflow, which builds and deploys the backend to **Azure App Service** and the frontend to **Azure**.
 *   **Environment Variables:** After deployment, ensure variables are configured in the **Azure Portal** and your frontend host.
 
 ---
@@ -64,7 +64,7 @@ To ensure the app runs correctly, set the following variables in your `.env` (Lo
 | :--- | :--- | :--- |
 | **DefaultConnection** | Connection string for Azure SQL | Backend / Azure App Service |
 | **JwtSettings__Secret** | 256-bit key for token encryption | Backend / Azure App Service |
-| **VITE_API_URL** | Base URL for the backend API | Frontend / Render |
+| **VITE_API_URL** | Base URL for the backend API | Frontend / Azure |
 
 ---
 # Buckeye-Marketplace
@@ -228,7 +228,7 @@ The database handles user verification, product listings, and secure transaction
 * **Frontend:** React 18+ (Vite)
 * **Backend API:** ASP.NET Core Web API (.NET 8)
 * **Database:** Azure SQL Database
-* **Hosting:** Azure App Service (Backend) & Render (Frontend)
+* **Hosting:** Azure App Service (Backend) & Azure (Frontend)
 * **CI/CD:** GitHub Actions
 
 ---
@@ -281,4 +281,4 @@ AI tools were used as collaborators across the entire SDLC.
 | :--- | :--- |
 | **DefaultConnection** | Azure App Service (Config) |
 | **JwtSettings__Secret** | Azure App Service (Secrets) |
-| **VITE_API_URL** | Render Environment Settings |
+| **VITE_API_URL** | Azure Environment Settings |
