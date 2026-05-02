@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom'
 import './App.css'
 import { CartProvider, useCart } from './context/CartContext';
-
+import Navbar from './components/Navbar';
+import OrderHistory from './components/OrderHistory';
+import Login from './components/Login';
 
 const ProductCard = ({ product }) => (
   <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -174,17 +176,47 @@ function ProductDetail() {
 }
 
 function ShoppingCart() {
-  const { cart, loading, updateQuantity, removeFromCart } = useCart();
+  const { cart, loading, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
 
-  if (loading) return <div style={{ padding: '40px' }}><p>Loading your Buckeye Cart...</p></div>;
-
-  const items = cart || []; 
-  
-  // 1. CALCULATE TOTAL: Looks for price/Price in multiple possible locations
+  // 1. CALCULATE TOTAL
+  const items = cart || [];
   const totalPrice = items.reduce((sum, item) => {
     const unitPrice = item.price || item.Price || item.product?.price || item.product?.Price || 0;
     return sum + (Number(unitPrice) * item.quantity);
   }, 0);
+
+  // 2. CHECKOUT HANDLER
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+
+    try {
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // If you have auth
+        },
+        body: JSON.stringify({
+          items: items,
+          totalAmount: totalPrice,
+          orderDate: new Date().toISOString()
+        })
+      });
+
+      if (response.ok) {
+        alert("O-H! Order placed successfully!");
+        clearCart(); // Clears the UI cart
+        navigate('/history'); // Jumps to the history page to see the new record
+      } else {
+        alert("Checkout failed. Check if your backend is running.");
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+    }
+  };
+
+  if (loading) return <div style={{ padding: '40px' }}><p>Loading your Buckeye Cart...</p></div>;
 
   return (
     <div style={{ padding: '40px', maxWidth: '900px', margin: '0 auto' }}>
@@ -200,7 +232,6 @@ function ShoppingCart() {
       ) : (
         <div style={{ backgroundColor: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
           {items.map((item) => {
-            // 2. FIND DATA: This "Deep Search" finds the name even if it's nested
             const displayTitle = item.title || item.Title || item.product?.title || item.product?.Title || "Unknown Item";
             const displayPrice = item.price || item.Price || item.product?.price || item.product?.Price || 0;
 
@@ -212,26 +243,10 @@ function ShoppingCart() {
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <button 
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)} 
-                    style={{ width: '35px', height: '35px', cursor: 'pointer', borderRadius: '4px', border: '1px solid #ccc' }}
-                  >-</button>
-                  
-                  <span style={{ fontSize: '1.2rem', fontWeight: 'bold', minWidth: '20px', textAlign: 'center' }}>
-                    {item.quantity}
-                  </span>
-                  
-                  <button 
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)} 
-                    style={{ width: '35px', height: '35px', cursor: 'pointer', borderRadius: '4px', border: '1px solid #ccc' }}
-                  >+</button>
-                  
-                  <button 
-                    onClick={() => removeFromCart(item.id)} 
-                    style={{ marginLeft: '20px', color: '#ba0c2f', border: 'none', background: 'none', cursor: 'pointer', fontWeight: 'bold' }}
-                  >
-                    Remove
-                  </button>
+                  <button onClick={() => updateQuantity(item.id, item.quantity - 1)} style={{ width: '35px', height: '35px', borderRadius: '4px', border: '1px solid #ccc' }}>-</button>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{item.quantity}</span>
+                  <button onClick={() => updateQuantity(item.id, item.quantity + 1)} style={{ width: '35px', height: '35px', borderRadius: '4px', border: '1px solid #ccc' }}>+</button>
+                  <button onClick={() => removeFromCart(item.id)} style={{ marginLeft: '20px', color: '#ba0c2f', border: 'none', background: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Remove</button>
                 </div>
               </div>
             );
@@ -239,6 +254,24 @@ function ShoppingCart() {
 
           <div style={{ marginTop: '40px', textAlign: 'right' }}>
             <h2 style={{ fontSize: '2rem' }}>Total: ${totalPrice.toFixed(2)}</h2>
+            
+            {/* NEW CHECKOUT BUTTON */}
+            <button 
+              onClick={handleCheckout}
+              style={{
+                backgroundColor: '#ba0c2f',
+                color: 'white',
+                padding: '15px 40px',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                marginTop: '20px'
+              }}
+            >
+              Place Order
+            </button>
           </div>
         </div>
       )}
@@ -351,40 +384,23 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        <nav style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          padding: '0 40px', 
-          background: '#ba0c2f', 
-          color: 'white',
-          height: '80px',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-        }}>
-          <Link to="/" style={{ color: 'white', fontWeight: '900', textDecoration: 'none', fontSize: '1.8rem' }}>
-            BUCKEYE MARKETPLACE
-          </Link>
-          <div style={{ display: 'flex', gap: '30px' }}>
-            <Link to="/login" style={{ color: 'white', textDecoration: 'none', fontSize: '1.1rem', display: 'flex', alignItems: 'center' }}>
-              👤 Login
-            </Link>
-            <Link to="/cart" style={{ color: 'white', textDecoration: 'none', fontSize: '1.1rem', display: 'flex', alignItems: 'center' }}>
-              🛒 Cart
-            </Link>
-          </div>
-        </nav>
-
+        <Navbar /> 
         <div style={{ backgroundColor: '#f4f4f4', minHeight: 'calc(100vh - 80px)' }}>
-          <Routes>
-            <Route path="/" element={<ProductList />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<ShoppingCart />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
+          <div className="container mt-4">
+            <Routes>
+              <Route path="/" element={<ProductList />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              {/* This matches the 'to="/cart"' in your Navbar */}
+              <Route path="/cart" element={<ShoppingCart />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/history" element={<OrderHistory />} />
+            </Routes>
+          </div>
         </div>
       </BrowserRouter>
     </CartProvider>
   );
 }
+
 
 export default App

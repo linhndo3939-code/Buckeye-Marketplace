@@ -47,35 +47,36 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
 
-    private async Task<string> GenerateJwtToken(IdentityUser user)
+private async Task<string> GenerateJwtToken(IdentityUser user)
+{
+    var claims = new List<Claim>
     {
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.Email!),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-        };
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email!),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.Name, user.Email!),
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
+    };
 
-        // FIX (Item #1d): Fetch roles from the database and add them to the JWT claims
-        var roles = await _userManager.GetRolesAsync(user);
-        foreach (var role in roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
-
-        // Professor coaching note: Ensure this key is in user-secrets, not just hardcoded here
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? "A_Very_Long_Temporary_Key_For_Testing_123!"));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _config["Jwt:Issuer"],
-            audience: _config["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddDays(1),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+    var roles = await _userManager.GetRolesAsync(user);
+    foreach (var role in roles)
+    {
+        claims.Add(new Claim(ClaimTypes.Role, role));
     }
+
+    // MATCH THESE TO YOUR Program.cs VALUES
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSuperSecretKey_MustBeLongEnough123!"));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+        issuer: "your-auth-server",
+        audience: "buckeye-marketplace-users",
+        claims: claims,
+        expires: DateTime.Now.AddDays(1),
+        signingCredentials: creds
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}
 }
 
 public record RegisterDto(string Email, string Password);

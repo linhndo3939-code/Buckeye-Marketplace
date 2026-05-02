@@ -1,13 +1,35 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using backend;
 
 var builder = WebApplication.CreateBuilder(args);
+// 1. Add JWT Authentication Services
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "your-auth-server", // Change this to your domain
+        ValidAudience = "buckeye-marketplace-users",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSuperSecretKey_MustBeLongEnough123!"))
+    };
+});
 
-// 1. Setup the policy
+// Add this single block
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.AllowAnyOrigin()  // This allows any website to call your API
+        policy => policy.WithOrigins("http://localhost:5173") // Your React URL
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
@@ -19,6 +41,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=buckeye_marketplace.db")); 
 
 var app = builder.Build();
+
 // --- FORCE DATABASE CREATION ---
 using (var scope = app.Services.CreateScope())
 {
@@ -26,7 +49,6 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        // This will create the database file and all tables if they don't exist
         context.Database.EnsureCreated();
         Console.WriteLine("Database check complete: buckeye_marketplace.db is ready.");
     }
@@ -35,23 +57,23 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Database creation failed: {ex.Message}");
     }
 }
-// -------------------------------
-// --- THE ORDER BELOW IS CRITICAL ---
+
+// --- MIDDLEWARE PIPELINE (THE CRITICAL ORDER) ---
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// --- MUST BE IN THIS ORDER ---
 
-// 2. Routing MUST come before CORS
-app.UseRouting();
+app.UseRouting(); // 1. Identify the route
 
-// 3. CORS MUST come after Routing but BEFORE Authorization/MapControllers
-app.UseCors("AllowReactApp");
+// 2. CORS MUST come after Routing but BEFORE Authentication/Authorization
+app.UseCors("AllowReactApp"); 
 
-app.UseAuthorization();
+app.UseAuthentication(); // 3. Who are you?
+app.UseAuthorization();  // 4. Are you allowed?
 
 app.MapControllers();
-
 app.Run();
